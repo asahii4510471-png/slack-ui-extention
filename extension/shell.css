@@ -1,0 +1,6 @@
+.sui-buttons { display:inline-flex; align-items:center; gap:2px; margin-inline:4px; vertical-align:middle; color:inherit; }
+.sui-buttons > button { display:grid; place-items:center; width:28px; height:28px; padding:4px; border:0; border-radius:5px; color:inherit; background:transparent; cursor:pointer; }
+.sui-buttons > button:hover { background:color-mix(in srgb,currentColor 12%,transparent); }
+.sui-buttons > button:focus-visible { outline:2px solid currentColor; }
+.sui-buttons svg { width:18px; height:18px; pointer-events:none; }
+.sui-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:2147483647; background:#242128; color:white; padding:10px 18px; border-radius:8px; font:14px/1.5 system-ui; pointer-events:none; }

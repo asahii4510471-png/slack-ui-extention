@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Slack UI 拡張",
+  "version": "0.1.0",
+  "description": "Slack のヘッダーとメッセージに機能ボタンを追加します。",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://app.slack.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.slack.com/*"
+      ],
+      "js": [
+        "boot.js"
+      ],
+      "css": [
+        "shell.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "shell.js",
+        "registry.js",
+        "settings.js",
+        "stub.js",
+        "features/*.js"
+      ],
+      "matches": [
+        "https://app.slack.com/*"
+      ]
+    }
+  ],
+  "options_page": "options.html"
+}
