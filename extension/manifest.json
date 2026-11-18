@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Slack UI 拡張",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Slack のヘッダーとメッセージに機能ボタンを追加します。",
   "permissions": [
     "storage"

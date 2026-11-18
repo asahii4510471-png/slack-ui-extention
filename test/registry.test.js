@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { loadFeatures } from '../extension/registry.js';
 import { watchSettings, key } from '../extension/settings.js';
 
-test('初期ボタンの配置と全 stub の通知', async () => {
+test('初期ボタンの配置と残り2機能 の通知', async () => {
   const features = await loadFeatures();
   assert.deepEqual(features.filter(f => f.location === 'header').map(f => f.id),
     ['mentions-filter', 'channel-grouping', 'open-in-browser', 'focus-mode']);
   assert.deepEqual(features.filter(f => f.location === 'message').map(f => f.id), ['send-to-tasks']);
-  for (const f of features) {
+  for (const f of features.filter(f => ['send-to-tasks','channel-grouping'].includes(f.id))) {
     const shown = [];
     f.onClick({ toast: text => shown.push(text), text: null, permalink: null });
     assert.deepEqual(shown, ['未実装：' + f.title]);

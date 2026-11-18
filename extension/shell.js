@@ -1,7 +1,7 @@
 import { loadFeatures } from './registry.js';
-import { key, watchSettings } from './settings.js';
+import { key, modeKey, activeMode, watchSettings } from './settings.js';
 
-const headers = ['[data-qa="view_header"]', '[data-qa="channel_header"]', '[role="banner"]', 'main header'];
+const headers = ['[data-qa="view_header"]', '[data-qa="channel_header"]', '[data-qa="activity-inbox-sidebar-header-title"]', '[role="banner"]', 'main header'];
 const actions = ['[data-qa="message_actions"]', '[data-qa="message_action_bar"]', '[data-qa="message-actions"]', '[role="toolbar"][aria-label*="message" i]', '[role="toolbar"][aria-label*="メッセージ"]'];
 const rows = '[id^="message-list_"], [data-item-key], [data-qa="message_container"], [role="listitem"]';
 const first = (root, selectors) => selectors.map(s => root?.querySelector(s)).find(Boolean);
@@ -44,7 +44,14 @@ function button(feature, host) {
   el.addEventListener('click', async event => {
     event.stopPropagation();
     try {
-      await feature.onClick(feature.location === 'message' ? context(host) : { toast });
+      await feature.onClick(feature.location === 'message' ? context(host) : {
+        toast,
+        async toggle() {
+          const k = modeKey(feature.id);
+          const values = await chrome.storage.local.get(k);
+          await chrome.storage.local.set({ [k]: values[k] !== true });
+        }
+      });
     } catch { toast('実行できませんでした：' + feature.title); }
   });
   return el;
@@ -68,9 +75,16 @@ function sync(host, location) {
 
 function refresh() {
   frame = 0;
+  for (const feature of features) {
+    feature.refresh?.({ enabled: settings[key(feature.id)] !== false,
+      active: activeMode(settings, feature.id), toast });
+  }
   const header = first(document, headers);
   const hosts = new Set();
   if (header) { sync(header, 'header'); hosts.add(header); }
+  for (const f of features.filter(f => f.toggle)) {
+    header?.querySelector('[data-feature="' + f.id + '"]')?.setAttribute('aria-pressed', String(activeMode(settings, f.id)));
+  }
   for (const host of document.querySelectorAll(actions.join(','))) {
     if (!host.closest(rows) || host.parentElement?.closest(actions.join(','))) continue;
     sync(host, 'message');
@@ -88,3 +102,4 @@ await watchSettings(features, values => { settings = values; schedule(); });
 new MutationObserver(schedule).observe(document.body, {
   childList: true, subtree: true, attributes: true, attributeFilter: ['role', 'data-qa', 'aria-label']
 });
+new MutationObserver(schedule).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });

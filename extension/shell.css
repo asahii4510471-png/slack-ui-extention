@@ -4,3 +4,14 @@
 .sui-buttons > button:focus-visible { outline:2px solid currentColor; }
 .sui-buttons svg { width:18px; height:18px; pointer-events:none; }
 .sui-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:2147483647; background:#242128; color:white; padding:10px 18px; border-radius:8px; font:14px/1.5 system-ui; pointer-events:none; }
+/* Keep the conversation header (and its exit button) and the thread pane visible. */
+.sui-focus-on:has([data-qa="view_header"], [data-qa="channel_header"]) :is([data-qa="top-nav"], [role="toolbar"][aria-label="履歴ナビゲーション"],
+  [data-qa="tab_rail_desktop"], [data-qa="channel-sidebar"],
+  [role="group"]:has([data-qa="channel-sidebar"]):not(:has([data-qa="view_header"])),
+  [role="slider"][aria-label="サイドバーの幅"]) { display:none !important; }
+.sui-focus-on:has([data-qa="view_header"], [data-qa="channel_header"]) [role="tabpanel"]:has(> [data-qa="tab_rail_desktop"]) > :is(div,section):has([data-qa="view_header"]) { grid-column-start:1 !important; }
+.sui-focus-on:has([data-qa="view_header"], [data-qa="channel_header"]) [role="group"]:has(> div > [data-qa="view_header"]) { grid-column-start:1 !important; }
+.sui-buttons button[aria-pressed="true"], .sui-filter button[aria-pressed="true"] { background:#176c59; color:white; }
+.sui-filter { display:inline-flex; flex-wrap:wrap; gap:4px; margin-inline:8px; }
+.sui-filter button { font:inherit; font-size:13px; color:inherit; background:transparent; border:1px solid currentColor; border-radius:5px; padding:2px 6px; cursor:pointer; }
+.sui-filter-hidden { display:none !important; }
